@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { OnInit } from '@angular/core';
-import { Observable, of, interval, concat, merge, from } from 'rxjs';
-import { map, reduce, filter, take } from 'rxjs/operators';
+import { Observable, of, interval, concat, merge, from, forkJoin } from 'rxjs';
+import { map, reduce, filter, take, startWith, defaultIfEmpty, every } from 'rxjs/operators';
 const studentList = from([
   {id:1, name:"John", grade:96},
   {id:2, name:"Jane", grade:84},
@@ -93,6 +93,48 @@ export class OperatorTest implements OnInit {
       next: (value) => mergeArr.push(value),
       error: (err) => console.log(err),
       complete: () => console.log("Merge Observable is completed", mergeArr)
+    });
+
+    //ForkJoin operator example to combine multiple observables into a single observable that emits an array of the last emitted values from each source observable
+    const obs6 = of(1, 2, 3);
+    const obs7 = of(4, 5, 6);
+    const obs8 = of(7, 8, 9);
+    const forkJoinObservable = forkJoin([obs6, obs7, obs8]);
+    let forkJoinArr: number[] = [];
+    forkJoinObservable.subscribe({
+      next: (value) => forkJoinArr.push(...value),
+      error: (err) => console.log(err),
+      complete: () => console.log("ForkJoin Observable is completed", forkJoinArr)
+    });
+
+    //startWith operator example to emit a specified value before the source observable emits any values
+    const obs9 = of(1, 2, 3);
+    const startWithObservable = obs9.pipe(startWith(0));
+    let startWithArr: number[] = [];
+    startWithObservable.subscribe({
+      next: (value) => startWithArr.push(value),
+      error: (err) => console.log(err),
+      complete: () => console.log("StartWith Observable is completed", startWithArr)
+    });
+
+    //defaultIfEmpty operator example to emit a default value if the source observable completes without emitting any values
+    const obs10 = of();
+    const defaultIfEmptyObservable = obs10.pipe(defaultIfEmpty(0));
+    let defaultIfEmptyArr: number[] = [];
+    defaultIfEmptyObservable.subscribe({
+      next: (value) => defaultIfEmptyArr.push(value),
+      error: (err) => console.log(err),
+      complete: () => console.log("DefaultIfEmpty Observable is completed", defaultIfEmptyArr)
+    });
+
+    //every operator example to emit a boolean value indicating whether all values emitted by the source observable satisfy a specified condition
+    const obs11 = of(1, 2, 3, 4, 5);
+    const everyObservable = obs11.pipe(every(value => value > 0));
+    let everyResult: boolean;
+    everyObservable.subscribe({
+      next: (value) => everyResult = value,
+      error: (err) => console.log(err),
+      complete: () => console.log("Every Observable is completed", everyResult)
     });
   }
 
