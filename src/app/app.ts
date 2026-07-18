@@ -1,12 +1,12 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { interval, Observable, Subscriber, take } from 'rxjs';
-import { ObservableTest } from './components/observable/observable';
-import { OperatorTest } from './components/operator/operator';
+import { ObservableTest } from './components/observable-test/observable-test';
+import { OperatorTest } from './components/operator-test/operator-test';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, OperatorTest],
+  imports: [RouterOutlet, ObservableTest, OperatorTest],
   templateUrl: './app.html',
   styleUrls: ['./app.css']
 })
